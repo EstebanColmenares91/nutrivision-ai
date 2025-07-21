@@ -13,6 +13,7 @@ export default function RootLayout() {
         name="analyze"
         options={{
           presentation: "modal",
+          title: "Nutrition Analysis",
           headerLeft: () => (
             <TouchableOpacity onPress={() => router.back()}>
               <Ionicons name="close" size={24} color="black" />
