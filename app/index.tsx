@@ -1,17 +1,25 @@
-import { Image } from "expo-image";
-import { router } from "expo-router";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, View } from "react-native";
 import "../global.css";
 
 import * as ImagePicker from "expo-image-picker";
-import { useState } from "react";
+import Animated, {
+  FadeInDown,
+  FadeInUp,
+  useAnimatedStyle,
+  useSharedValue,
+} from "react-native-reanimated";
 
-const blurhash =
-  "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
+import Button from "@/components/Button";
+import Feature from "@/components/Feature";
+import Footer from "@/components/Footer";
+import Feather from "@expo/vector-icons/Feather";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { router } from "expo-router";
 
 export default function Index() {
-  const [image, setImage] = useState<string | null>(null);
-  const pickImage = async () => {
+  const sparkleRotation = useSharedValue(0);
+
+  const handleSelectFromGallery = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
       quality: 1,
@@ -21,7 +29,7 @@ export default function Index() {
     await fetchData(result);
   };
 
-  const takePhoto = async () => {
+  const handleTakePhoto = async () => {
     await ImagePicker.requestCameraPermissionsAsync();
     let result = await ImagePicker.launchCameraAsync({
       mediaTypes: ["images"],
@@ -34,7 +42,6 @@ export default function Index() {
 
   const fetchData = async (res: ImagePicker.ImagePickerResult) => {
     if (res.canceled) return;
-    setImage(res.assets[0].uri);
     try {
       const response = await fetch("/api/ai", {
         method: "POST",
@@ -49,30 +56,79 @@ export default function Index() {
       });
 
       const data = await response.json();
-
       console.log(data.data?.meal_analysis);
+      router.push({
+        pathname: "/analyze",
+        params: { imageUri: res.assets[0].uri },
+      });
     } catch (error) {
       console.error(error);
     }
   };
 
+  const animatedSparkleStyle = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${sparkleRotation.value}deg` }],
+  }));
+
   return (
-    <View className="items-center justify-center flex-1">
-      <Text className="text-xl text-center">
-        Edit app/index.tsx to edit this screen.
-      </Text>
+    <View className="flex-1 bg-black">
+      <View className="flex-1 justify-center items-center px-6">
+        {/* Header Section */}
+        <Animated.View
+          entering={FadeInUp.delay(200)}
+          className="items-center mb-12"
+        >
+          <View className="relative mb-6">
+            <View className="bg-white/20 rounded-full p-6 mb-4">
+              <Feather name="target" size={48} color="white" />
+            </View>
+            <Animated.View
+              style={[animatedSparkleStyle]}
+              className="absolute -top-2 -right-2"
+            >
+              <Ionicons name="sparkles-outline" size={24} color="#fbbf24" />
+            </Animated.View>
+          </View>
 
-      <Image source={image} className="h-14 w-14" />
+          <Text className="text-4xl font-bold text-white text-center mb-3">
+            NutriVision AI
+          </Text>
+          <Text className="text-lg text-blue-100 text-center leading-6">
+            Instantly analyze your meals for detailed{"\n"}nutrition information
+            and health insights
+          </Text>
+        </Animated.View>
 
-      <TouchableOpacity onPress={() => router.push("/analyze")}>
-        <Text>Present modal</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => pickImage()}>
-        <Text>Select from gallery</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => takePhoto()}>
-        <Text>Take a photo</Text>
-      </TouchableOpacity>
+        {/* Features Section */}
+        <Animated.View entering={FadeInUp.delay(400)} className="mb-12">
+          <View className="flex-row justify-center space-x-8 mb-8 gap-2">
+            <Feature iconName="trending-up" value="Track Progress" />
+            <Feature iconName="target" value="AI Analysis" />
+            <Feature iconName="heart" value="Health Score" />
+          </View>
+        </Animated.View>
+
+        {/* Action Buttons */}
+        <Animated.View
+          entering={FadeInDown.delay(600)}
+          className="w-full space-y-4"
+        >
+          <Button
+            value="Take a Photo"
+            iconName="camera"
+            onPress={handleTakePhoto}
+          />
+          <Button
+            value="Select from Gallery"
+            iconName="image"
+            className="bg-white/10 border-2 border-white/30 rounded-2xl p-6 flex-row items-center justify-center"
+            textClassName="text-white text-lg font-semibold ml-3"
+            iconColor="white"
+            onPress={handleSelectFromGallery}
+          />
+        </Animated.View>
+        <Footer />
+      </View>
     </View>
   );
 }
