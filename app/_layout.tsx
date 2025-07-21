@@ -1,5 +1,25 @@
-import { Stack } from "expo-router";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { router, Stack } from "expo-router";
+import { TouchableOpacity } from "react-native";
 
 export default function RootLayout() {
-  return <Stack />;
+  return (
+    <Stack>
+      <Stack.Screen
+        name="index"
+        options={{ headerShown: false }}
+      ></Stack.Screen>
+      <Stack.Screen
+        name="analyze"
+        options={{
+          presentation: "modal",
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => router.back()}>
+              <Ionicons name="close" size={24} color="black" />
+            </TouchableOpacity>
+          ),
+        }}
+      ></Stack.Screen>
+    </Stack>
+  );
 }
