@@ -17,6 +17,7 @@ export async function POST(req: Request) {
 
         {
           "meal_analysis": {
+            "dish_name": string,
             "items": [
               {
                 "name": "food name",
@@ -29,35 +30,6 @@ export async function POST(req: Request) {
                   "sugars_g": number,
                   "fiber_g": number,
                   "fats_g": number,
-                  "saturated_fats_g": number,
-                  "trans_fats_g": number,
-                  "cholesterol_mg": number,
-                  "sodium_mg": number,
-                  "potassium_mg": number,
-                  "vitamins": {
-                    "vitamin_A_mcg": number,
-                    "vitamin_C_mg": number,
-                    "vitamin_D_mcg": number,
-                    "vitamin_E_mg": number,
-                    "vitamin_K_mcg": number,
-                    "thiamin_mg": number,
-                    "riboflavin_mg": number,
-                    "niacin_mg": number,
-                    "vitamin_B6_mg": number,
-                    "folate_mcg": number,
-                    "vitamin_B12_mcg": number,
-                    "pantothenic_acid_mg": number
-                  },
-                  "minerals": {
-                    "calcium_mg": number,
-                    "iron_mg": number,
-                    "magnesium_mg": number,
-                    "phosphorus_mg": number,
-                    "zinc_mg": number,
-                    "copper_mg": number,
-                    "manganese_mg": number,
-                    "selenium_mcg": number
-                  }
                 },
                 "calculated_totals": {
                   "calories": number,
@@ -77,7 +49,6 @@ export async function POST(req: Request) {
               "fats_g": number,
               "health_score": 1-10
             },
-            "dietary_flags": ["array"],
             "nutritional_highlights": {
               "highest_vitamin": {
                 "name": "string",
@@ -106,8 +77,17 @@ export async function POST(req: Request) {
         8. Return ONLY valid JSON with no additional commentary or formatting
     `;
 
+    const generationConfig = {
+      temperature: 0.2,
+      topP: 0.1,
+      maxOutputTokens: 2000,
+    };
+
     const { image } = await req.json();
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+    const model = genAI.getGenerativeModel({
+      model: "gemini-2.0-flash",
+      generationConfig,
+    });
     const result = await model.generateContent([prompt, image]);
     const text = result.response.text();
     const cleanedText = text.replace(/```json\n?|\n?```/g, "").trim();
