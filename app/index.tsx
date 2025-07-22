@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Text, View } from "react-native";
 import "../global.css";
 
@@ -7,6 +8,8 @@ import Animated, {
   FadeInUp,
   useAnimatedStyle,
   useSharedValue,
+  withRepeat,
+  withTiming,
 } from "react-native-reanimated";
 
 import Button from "@/components/Button";
@@ -68,12 +71,20 @@ export default function Index() {
     }
   };
 
+  useEffect(() => {
+    sparkleRotation.value = withRepeat(
+      withTiming(360, { duration: 3000 }),
+      -1,
+      false
+    );
+  }, []);
+
   const animatedSparkleStyle = useAnimatedStyle(() => ({
     transform: [{ rotate: `${sparkleRotation.value}deg` }],
   }));
 
   return (
-    <View className="flex-1 bg-black">
+    <View className="flex-1 bg-light-background">
       <View className="flex-1 justify-center items-center px-6">
         {/* Header Section */}
         <Animated.View
@@ -81,8 +92,8 @@ export default function Index() {
           className="items-center mb-12"
         >
           <View className="relative mb-6">
-            <View className="bg-white/20 rounded-full p-6 mb-4">
-              <Feather name="target" size={48} color="white" />
+            <View className="bg-primary-100 rounded-full p-6 mb-4">
+              <Feather name="target" size={48} color="#77569c" />
             </View>
             <Animated.View
               style={[animatedSparkleStyle]}
@@ -92,10 +103,10 @@ export default function Index() {
             </Animated.View>
           </View>
 
-          <Text className="text-4xl font-bold text-white text-center mb-3">
+          <Text className="text-light-text-primary text-4xl font-bold text-center mb-3">
             NutriVision AI
           </Text>
-          <Text className="text-lg text-blue-100 text-center leading-6">
+          <Text className="text-light-text-secondary text-lg text-center leading-6">
             Instantly analyze your meals for detailed{"\n"}nutrition information
             and health insights
           </Text>
@@ -118,14 +129,17 @@ export default function Index() {
           <Button
             value="Take a Photo"
             iconName="camera"
+            iconColor="white"
             onPress={handleTakePhoto}
+            className="bg-primary-500 border-2 border-white/30 rounded-2xl p-6 flex-row items-center justify-center"
+            textClassName=" text-lg font-semibold ml-3 text-white"
           />
           <Button
             value="Select from Gallery"
             iconName="image"
-            className="bg-white/10 border-2 border-white/30 rounded-2xl p-6 flex-row items-center justify-center"
-            textClassName="text-white text-lg font-semibold ml-3"
-            iconColor="white"
+            className="bg-white/10 border-2 border-primary-500 rounded-2xl p-6 flex-row items-center justify-center"
+            textClassName=" text-lg font-semibold ml-3 text-primary-500"
+            iconColor="#77569c"
             onPress={handleSelectFromGallery}
           />
         </Animated.View>
