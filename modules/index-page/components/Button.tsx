@@ -9,6 +9,7 @@ interface ButtonProps extends TouchableOpacityProps {
   iconColor?: string;
   iconSize?: number;
   textClassName?: string;
+  buttonClassName?: string;
 }
 
 export default function Button({
@@ -16,18 +17,20 @@ export default function Button({
   iconName,
   iconColor = "#3b82f6",
   iconSize = 24,
-  textClassName = "text-primary-600 text-lg font-semibold ml-3",
+  textClassName,
   ...props
 }: ButtonProps) {
   return (
     <TouchableOpacity
+      {...props}
       onPress={props.onPress}
       activeOpacity={0.8}
-      className="bg-white rounded-2xl p-6 flex-row items-center justify-center shadow-lg"
-      {...props}
+      className={`rounded-2xl p-6 flex-row items-center justify-center shadow-lg ${props.buttonClassName}`}
     >
       <Feather name={iconName} size={iconSize} color={iconColor} />
-      <Text className={textClassName}>{value}</Text>
+      <Text className={`text-lg font-semibold ml-3 ${textClassName}`}>
+        {value}
+      </Text>
     </TouchableOpacity>
   );
 }

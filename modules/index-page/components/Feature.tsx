@@ -14,14 +14,16 @@ export default function Feature({
   value,
   iconName,
   iconSize = 24,
-  iconColor = "white",
+  iconColor = "#4b5563",
 }: FeatureProps) {
   return (
     <View className="items-center">
-      <View className="bg-white/10 rounded-full p-3 mb-2">
+      <View className="bg-primary-100 rounded-full p-3 mb-2">
         <Feather name={iconName} size={iconSize} color={iconColor} />
       </View>
-      <Text className="text-white text-xs font-medium">{value}</Text>
+      <Text className="text-light-text-secondary text-xs font-medium">
+        {value}
+      </Text>
     </View>
   );
 }

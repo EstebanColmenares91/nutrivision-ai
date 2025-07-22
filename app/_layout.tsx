@@ -3,6 +3,8 @@ import { router, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { TouchableOpacity } from "react-native";
 
+import "../global.css";
+
 export default function RootLayout() {
   return (
     <>
