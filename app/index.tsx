@@ -12,12 +12,14 @@ import Animated, {
 import Button from "@/components/Button";
 import Feature from "@/components/Feature";
 import Footer from "@/components/Footer";
+import { useMeal } from "@/store/food";
 import Feather from "@expo/vector-icons/Feather";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { router } from "expo-router";
 
 export default function Index() {
   const sparkleRotation = useSharedValue(0);
+  const { updateMeal } = useMeal();
 
   const handleSelectFromGallery = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -56,7 +58,7 @@ export default function Index() {
       });
 
       const data = await response.json();
-      console.log(data.data?.meal_analysis);
+      updateMeal(data.data.meal_analysis);
       router.push({
         pathname: "/analyze",
         params: { imageUri: res.assets[0].uri },

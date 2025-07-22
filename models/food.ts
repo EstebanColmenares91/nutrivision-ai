@@ -4,6 +4,7 @@ export interface Meal {
 
 export interface Food {
   dish_name: string;
+  portionDescription: string;
   items: Item[];
   meal_totals: Totals;
   nutritional_highlights: NutritionalHighlights;
@@ -26,6 +27,7 @@ export interface Totals {
   carbs_g?: number;
   fats_g: number;
   carbohydrates_g?: number;
+  health_score: number;
 }
 
 export interface NutritionPer100G {

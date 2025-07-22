@@ -18,6 +18,7 @@ export async function POST(req: Request) {
         {
           "meal_analysis": {
             "dish_name": string,
+            "portionDescription": string,
             "items": [
               {
                 "name": "food name",
