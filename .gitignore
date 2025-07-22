@@ -38,3 +38,9 @@ yarn-error.*
 
 app-example
 /android
+
+package-lock.json
+pnpm-lock.yaml
+# yarn
+yarn.lock
+bun.lockb
